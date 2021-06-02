@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class BatchConfiguration {
+public class ImportUserBatchConfiguration {
 
 	@Autowired
 	public JobBuilderFactory jobBuilderFactory;
