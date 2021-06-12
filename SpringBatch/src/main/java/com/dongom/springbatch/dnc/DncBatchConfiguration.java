@@ -8,6 +8,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.step.builder.SimpleStepBuilder;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -30,26 +31,32 @@ public class DncBatchConfiguration {
 	@Bean
 	public Job dncJob() {
 		return jobBuilderFactory.get("dncJob")
-				.start(dncStep1(null))
+				.start(dncStep1(null, null))
 				.build();
 	}
 
 	@Bean
 	@JobScope
-	public Step dncStep1(@Value("#{jobParameters[requestDate]}") String requestDate) {
+	public Step dncStep1(@Value("#{jobParameters[requestDate]}") String requestDate, 
+			@Value("#{jobParameters[brnCd]}") String brnCd) {
 		log.info(">>>>> This is Step1");
 		log.info(">>>>> requestDate = {}", requestDate);
 		StepBuilder stepBuilder = stepBuilderFactory.get("dncStep");
 		SimpleStepBuilder simpleStepBuilder = stepBuilder.<String, String>chunk(10);
-		simpleStepBuilder.reader(dncreader(null));
+
+		simpleStepBuilder.reader(dncReader(null, null));
+		simpleStepBuilder.processor(dncProcessor());
 		simpleStepBuilder.writer(dncwriter());
 		return simpleStepBuilder.build();
 	}
 
 	@Bean
 	@StepScope
-	public FlatFileItemReader dncreader(@Value("#{jobParameters[requestDate]}") String requestDate) {
+	public FlatFileItemReader dncReader(@Value("#{jobParameters[requestDate]}") String requestDate, 
+			@Value("#{jobParameters[brnCd]}") String brnCd) {
 		FlatFileItemReaderBuilder reader = new FlatFileItemReaderBuilder();
+		System.out.println(requestDate);
+		System.out.println(brnCd);
 		// DNC_YYYYYMMDD.dat
 		String fileName = "DNC_" + requestDate + ".dat";
 		reader.name("dncItemReader");
@@ -57,6 +64,11 @@ public class DncBatchConfiguration {
 		reader.lineTokenizer(new DelimitedLineTokenizer());
 		reader.fieldSetMapper(new DncFieldSetMapper());
 		return reader.build();
+	}
+	
+	@Bean
+	public ItemProcessor<DncMapper, String> dncProcessor() {
+		return (ItemProcessor<DncMapper, String>) new DncMapper();
 	}
 	
 	@Bean
