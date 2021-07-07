@@ -21,7 +21,6 @@ import org.springframework.core.io.ClassPathResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Configuration
 @Slf4j
 @RequiredArgsConstructor
 public class DncBatchConfiguration {
@@ -67,8 +66,8 @@ public class DncBatchConfiguration {
 	}
 	
 	@Bean
-	public ItemProcessor<DncMapper, String> dncProcessor() {
-		return (ItemProcessor<DncMapper, String>) new DncMapper();
+	public ItemProcessor<String, String> dncProcessor() {
+		return (ItemProcessor<String, String>) new DncMapper();
 	}
 	
 	@Bean
