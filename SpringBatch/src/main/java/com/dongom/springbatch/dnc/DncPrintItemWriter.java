@@ -8,11 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class DncPrintItemWriter implements ItemWriter<DncMapper>  {
+public class DncPrintItemWriter implements ItemWriter<Dnc>  {
 
 	@Override
-	public void write(List<? extends DncMapper> items) throws Exception {
-		for (DncMapper item : items) {
+	public void write(List<? extends Dnc> items) throws Exception {
+		for (Dnc item : items) {
 			log.info(item.getCusNo());
 		}
 	}

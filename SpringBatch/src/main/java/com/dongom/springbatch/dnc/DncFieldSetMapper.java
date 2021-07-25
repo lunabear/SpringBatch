@@ -2,15 +2,15 @@ package com.dongom.springbatch.dnc;
 
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
-import org.springframework.validation.BindException;
 
-public class DncFieldSetMapper implements FieldSetMapper<DncMapper> {
+public class DncFieldSetMapper implements FieldSetMapper<Dnc> {
+	
 
-	@Override
-	public DncMapper mapFieldSet(FieldSet fieldSet) throws BindException {
-		DncMapper dncMapper = new DncMapper();
-		dncMapper.setCusNo(fieldSet.readString(0));
-		return dncMapper;
+	public Dnc mapFieldSet(FieldSet fs) {
+		
+		Dnc dnc = new Dnc();
+		dnc.setCusNo(fs.readString(0));
+		return dnc;
 	}
 
 }
